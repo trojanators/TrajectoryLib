@@ -29,15 +29,15 @@ public class TextFileSerializer implements IPathSerializer {
    * @return A string representation.
    */
   public String serialize(Path path) {
-    String content = path.getName() + "\n";
+    String content =  "";
     path.goLeft();
-    content += path.getLeftWheelTrajectory().getNumSegments() + "\n";
+   // content += path.getLeftWheelTrajectory().getNumSegments() + "\n";
     content += serializeTrajectory(path.getLeftWheelTrajectory());
-    content += serializeTrajectory(path.getRightWheelTrajectory());
+   // content += serializeTrajectory(path.getRightWheelTrajectory());
     return content;
   }
   
-  private String serializeTrajectory(Trajectory trajectory) {
+  /*private String serializeTrajectory(Trajectory trajectory) {
     String content = "";
     for (int i = 0; i < trajectory.getNumSegments(); ++i) {
       Segment segment = trajectory.getSegment(i);
@@ -48,5 +48,20 @@ public class TextFileSerializer implements IPathSerializer {
     }
     return content;
   }
+*/
   
+    private String serializeTrajectory(Trajectory trajectory) {
+    String content = "";
+    double totT = 0.0;
+    for (int i = 0; i < trajectory.getNumSegments(); ++i) {
+      Segment segment = trajectory.getSegment(i);
+      content += String.format(
+              "%.3f, %.3f, %.3f, %.3f, 0, %.3f, %.3f, %.3f\n", 
+              segment.pos, segment.vel, segment.acc, segment.heading,
+               totT, segment.x, segment.y);
+      totT += segment.dt;
+    }
+    return content;
+  
+}
 }
